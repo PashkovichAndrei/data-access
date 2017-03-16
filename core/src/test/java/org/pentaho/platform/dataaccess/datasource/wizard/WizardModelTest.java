@@ -12,7 +12,7 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright (c) 2002-2013 Pentaho Corporation..  All rights reserved.
+* Copyright (c) 2002-2017 Pentaho Corporation..  All rights reserved.
 */
 
 package org.pentaho.platform.dataaccess.datasource.wizard;
@@ -22,7 +22,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Assert;
 import org.junit.Test;
+import org.pentaho.platform.dataaccess.datasource.wizard.models.DatasourceDTOUtil;
 import org.pentaho.platform.dataaccess.datasource.wizard.models.WizardModel;
 import org.pentaho.platform.dataaccess.datasource.wizard.service.IXulAsyncDSWDatasourceService;
 import org.pentaho.platform.dataaccess.datasource.wizard.sources.query.QueryDatasource;
@@ -65,5 +67,13 @@ public class WizardModelTest {
     model.addDatasource(subClass);
     assertTrue(model.getDatasources().contains(subClass));
 
+  }
+
+  @Test
+  public void testSanitizeInput() {
+    String s1 = DatasourceDTOUtil.sanitizeName( "<iMg SrC=x OnErRoR=alert(11111)>" );
+    Assert.assertEquals( "iMg SrCx OnErRoRalert(11111)", s1 );
+    String s2 = DatasourceDTOUtil.sanitizeName( "<$&=?/>" );
+    Assert.assertEquals( "", s2 );
   }
 }
